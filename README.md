@@ -13,9 +13,9 @@ Simulates synthetic data from a DAG where each node is randomly assigned as eith
 ---
 ## 🔧 Installation
 
-1. Clone the repository:
+Install the class:
 ```python
-git clone https://github.com/YOUR_USERNAME/dag_simulator.git
+pip install git+https://github.com/averinpa/simulator-from-dag.git
 
 ```
 
