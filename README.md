@@ -23,14 +23,14 @@ pip install git+https://github.com/averinpa/simulator-from-dag.git
 
 ```python
 import networkx as nx
-from simulator import DAGSimulator
+from simulator import SimulatorFromDAG
 
 # Define DAG
 G = nx.DiGraph()
 G.add_edges_from([("X1", "Y"), ("X2", "Y"), ("X1", "Z")])
 
 # Simulate
-sim = DAGSimulator(G, n_samples=1000, seed=42)
+sim = SimulatorFromDAG(G, n_samples=1000, seed=42)
 result = sim.simulate()
 
 # Access simulated data
