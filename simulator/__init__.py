@@ -89,9 +89,10 @@ class SimulatorFromDAG:
                         "type": "continuous", "dist": "normal", "mean": 0, "std": 1
                     }
                 else:
-                    self.data[node] = self.rng.binomial(1, 0.5, size=self.n_samples)
+                    draws = self.rng.binomial(1, 0.5, size=self.n_samples)
+                    self.data[node] = draws
                     self.parametrization[node] = {
-                        "type": "binary", "dist": "bernoulli", "p": 0.5
+                        "type": "binary", "dist": "bernoulli", "p": 0.5," draws": draws
                     }
             else:
                 weights = self._generate_nonzero_weights(parents)
@@ -100,15 +101,29 @@ class SimulatorFromDAG:
 
                 if node_type == "binary":
                     prob = expit(lin_comb)
-                    self.data[node] = self.rng.binomial(1, prob)
+                    uniform_noise = self.rng.uniform(0, 1, size=self.n_samples)
+                    draws = (uniform_noise < prob).astype(int)
+                    self.data[node] = draws
                     self.parametrization[node] = {
-                        "type": "binary", "link": "sigmoid", "weights": weights, "bias": bias
+                        "type": "binary", 
+                        "link": "sigmoid", 
+                        "weights": weights, 
+                        "bias": bias,
+                        "prob": prob,
+                        "uniform_noise": uniform_noise,
+                        "draws": draws
                     }
                 else:
                     noise_std = self.rng.uniform(0.5, 1.5)
-                    self.data[node] = lin_comb + self.rng.normal(0, noise_std, size=self.n_samples)
+                    noise = self.rng.normal(0, noise_std, size=self.n_samples)
+                    self.data[node] = lin_comb + noise
                     self.parametrization[node] = {
-                        "type": "continuous", "link": "linear", "weights": weights, "bias": bias, "noise_std": noise_std
+                        "type": "continuous", 
+                        "link": "linear", 
+                        "weights": weights, 
+                        "bias": bias, 
+                        "noise_std": noise_std,
+                        "draws": noise
                     }
 
         return {

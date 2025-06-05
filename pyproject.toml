@@ -1,7 +1,7 @@
 [project]
 name = "simulator-from-dag"
 version = "0.1.0"
-description = "Simulate data from a DAG"
+description = "Simulate data from a DAGg"
 authors = [{ name="Pavel Averin" }]
 readme = "README.md"
 requires-python = ">=3.7"
