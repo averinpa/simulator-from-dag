@@ -54,7 +54,7 @@ import networkx as nx
 from scipy.special import expit
 
 class SimulatorFromDAG:
-    def __init__(self, graph: nx.DiGraph, n_samples=1000, seed=None):
+    def __init__(self, graph: nx.DiGraph, n_samples=1000, binary_node_proportion=0.5, seed=None):
         self.graph = graph
         self.n_samples = n_samples
         self.seed = seed
@@ -62,6 +62,7 @@ class SimulatorFromDAG:
         self.node_types = {}
         self.parametrization = {}
         self.data = pd.DataFrame(index=range(n_samples))
+        self.binary_node_proportion = binary_node_proportion
 
     def _sample_nonzero_weight(self, low=0.1, high=2.0):
         sign = self.rng.choice([-1, 1])
@@ -72,7 +73,7 @@ class SimulatorFromDAG:
 
     def _assign_node_types(self):
         for node in self.graph.nodes():
-            self.node_types[node] = self.rng.choice(["binary", "continuous"])
+            self.node_types[node] = self.rng.choice(["binary", "continuous"], p=[self.binary_node_proportion, 1 - self.binary_node_proportion])
 
     def simulate(self):
         self._assign_node_types()
